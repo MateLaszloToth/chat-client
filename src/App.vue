@@ -81,19 +81,23 @@ const sendMessage = async (text: string): Promise<void> => {
 </script>
 
 <template>
-  <div class="app">
-    <!-- Floating chat button -->
+  <section class="chat-application" aria-label="Chat Application">
+    <!-- Floating chat button - only visible when chat is closed -->
     <button 
+      v-if="!isChatOpen"
       class="chat-toggle-button"
       @click="toggleChat"
-      :class="{ 'active': isChatOpen }"
+      aria-label="Open chat"
     >
-      <span v-if="!isChatOpen" class="open-icon">💬</span>
-      <span v-else class="close-icon">✕</span>
+      <span class="open-icon">💬</span>
     </button>
     
     <!-- Chat widget -->
-    <div class="chat-widget" :class="{ 'open': isChatOpen }">
+    <aside 
+      class="chat-widget" 
+      :class="{ 'open': isChatOpen }"
+      aria-hidden="!isChatOpen"
+    >
       <header class="chat-header">
         <h1>AI Chat</h1>
         <div class="header-buttons">
@@ -106,7 +110,7 @@ const sendMessage = async (text: string): Promise<void> => {
         </div>
       </header>
       
-      <main class="chat-container">
+      <section class="chat-container">
         <ChatWindow :messages="messages" />
         <div v-if="isLoading" class="typing-indicator">
           <div class="dot"></div>
@@ -114,9 +118,9 @@ const sendMessage = async (text: string): Promise<void> => {
           <div class="dot"></div>
         </div>
         <ChatInput @send-message="sendMessage" />
-      </main>
-    </div>
-  </div>
+      </section>
+    </aside>
+  </section>
 </template>
 
 <style>
@@ -137,7 +141,7 @@ body {
 </style>
 
 <style scoped>
-.app {
+.chat-application {
   /* Remove the full-page constraints */
   position: relative;
   width: 100%;
@@ -177,7 +181,7 @@ body {
 /* Chat widget */
 .chat-widget {
   position: fixed;
-  bottom: 80px;
+  bottom: 20px;
   right: 20px;
   width: 320px;
   height: 450px;
@@ -197,6 +201,7 @@ body {
 .chat-widget.open {
   transform: scale(1);
   opacity: 1;
+  bottom: 20px;
 }
 
 .chat-header {
@@ -278,7 +283,7 @@ body {
   .chat-widget {
     width: 85%;
     height: 60vh;
-    bottom: 70px;
+    bottom: 15px;
     right: 7.5%;
   }
   
